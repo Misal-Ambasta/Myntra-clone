@@ -1,14 +1,10 @@
 import './App.css';
-import FilterContainer from './components/FilterContainer';
-import Navbar from "./components/Navbar"
-import Shirts from './components/Shirts';
+import PublicRoutes from "./Routes/PublicRoutes"
 
 function App() {
   return (
     <div className="App">
-      <Navbar />
-      <FilterContainer />
-      <Shirts />
+      <PublicRoutes />
     </div>
   );
 }

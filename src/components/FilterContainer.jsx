@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllShirts } from "../redux/action"
 import { makeStyles, Box, RadioGroup, Radio, Typography, Paper, Checkbox, FormControl, FormControlLabel } from '@material-ui/core/';
 
 const useStyles = makeStyles((theme) => ({
@@ -7,17 +9,31 @@ const useStyles = makeStyles((theme) => ({
         // fontWeight: "300",
     },
     paperFilter: {
-        padding: theme.spacing(2),
+        padding: "15px 30px",
         color: theme.palette.text.secondary,
         width: '100%',
         cursor: 'pointer',
-        height: 'max-content'
+        height: 'max-content',
+        marginTop:"10px"
         // boxShadow: "11px 11px 28px -11px rgba(0,0,0,0.75)",
     }
 }));
 
 export default function FilterContainer() {
     const classes = useStyles();
+    const [filterShirt, setFilterShirt] = useState({categories:[], gender:"", discount:""})
+    const dispatch = useDispatch();
+
+    const handleGenderFilter = (value) => {
+        setFilterShirt({
+            ...filterShirt, gender: value
+        })
+        
+        dispatch(getAllShirts({
+            ...filterShirt, gender: value
+        }))
+    }
+
     return (
         <Paper className={classes.paperFilter}>
             <Box>
@@ -25,7 +41,7 @@ export default function FilterContainer() {
                     Filters
                 </Typography>
                 <hr />
-                <RadioGroup aria-label="category" name="category">
+                <RadioGroup aria-label="category" name="category" onChange={handleGenderFilter}>
                     <FormControlLabel size="small" style={{ color: 'black' }} value="men" control={<Radio color="secondary" size="small" />} label="Men" />
                     <FormControlLabel size="small" style={{ color: 'black' }} value="women" control={<Radio color="secondary" size="small" />} label="Women" />
                     <FormControlLabel size="small" style={{ color: 'black' }} value="boys" control={<Radio color="secondary" size="small" />} label="Boys" />
