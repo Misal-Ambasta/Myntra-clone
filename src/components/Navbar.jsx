@@ -1,6 +1,7 @@
 import React from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import { useSelector } from 'react-redux';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -17,6 +18,9 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
+import { useDispatch } from 'react-redux';
+import { getAllShirts } from '../redux/action';
+import RightSideBar from "./RightSideBar"
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -101,6 +105,9 @@ export default function PrimarySearchAppBar() {
     const classes = useStyles();
     const [ anchorEl, setAnchorEl ] = React.useState(null);
     const [ mobileMoreAnchorEl, setMobileMoreAnchorEl ] = React.useState(null);
+    const dispatch = useDispatch();
+    const cart = useSelector((state) => state.cart);
+    const wishlist = useSelector((state) => state.wishlist);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -121,6 +128,12 @@ export default function PrimarySearchAppBar() {
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
+
+    const handleSearch = (e) => {
+        if(e.keyCode == 13){
+            dispatch(getAllShirts(`q=${e.target.value}`));
+        }
+    }
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -193,6 +206,7 @@ export default function PrimarySearchAppBar() {
                                 fullWidth: "true"
                             }}
                             inputProps={{ 'aria-label': 'search' }}
+                            onKeyDown={handleSearch}
                         />
                     </div>
                     <div className={classes.grow} />
@@ -210,20 +224,16 @@ export default function PrimarySearchAppBar() {
                                 <Badge color="secondary">
                                     <FavoriteBorderIcon style={{ color: 'rgb(105, 110, 121)' }} />
                                 </Badge>
-                                <Typography className={classes.iconTitle} variant="div" noWrap>
-                                    Wishlist
-                                </Typography>
+                                <RightSideBar name={"Wishlist"} data={wishlist}/>
                             </div>
                         </IconButton>
 
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
+                        <IconButton aria-label="show new notifications" color="inherit">
                             <div className={classes.iconContainer}>
-                                <Badge badgeContent={17} color="secondary">
+                                <Badge badgeContent={cart.length} color="secondary">
                                     <LocalMallIcon style={{ color: 'rgb(105, 110, 121)' }} />
                                 </Badge>
-                                <Typography className={classes.iconTitle} variant="div" noWrap>
-                                    Bag
-                                </Typography>
+                                <RightSideBar name={"Bag"} data={cart}/>
                             </div>
                         </IconButton>
                     </div>

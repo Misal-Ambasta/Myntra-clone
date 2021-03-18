@@ -1,4 +1,4 @@
-import { ADD_PRODUCT_TO_CART, FILTER, GET_ALL_MYNTRA_SHIRTS,GET_ALL_MYNTRA_SHIRTS_SUCCESS, GET_ALL_MYNTRA_SHIRTS_FAILURE, DELETE_PRODUCT, INCREASE_QUANTITY, DECREASE_QUANTITY } from "./actionTypes";
+import { ADD_PRODUCT_TO_CART,DELETE_FROM_CART, FILTER,ADD_TO_WISHLIST, GET_ALL_MYNTRA_SHIRTS,GET_ALL_MYNTRA_SHIRTS_SUCCESS, GET_ALL_MYNTRA_SHIRTS_FAILURE, DELETE_PRODUCT, INCREASE_QUANTITY, DECREASE_QUANTITY } from "./actionTypes";
 import axios from 'axios'
 
 export const getAllMyntraShirts = () => ({
@@ -40,24 +40,23 @@ export const filterData = (payload) => ({
     payload
 })
 
+export const addToWishlist = (payload) => ({
+    type: ADD_TO_WISHLIST,
+    payload
+})
+
+export const deleteFromCart = (payload) => ({
+    type: DELETE_FROM_CART,
+    payload
+})
+
 export const getAllShirts = (payload) => async(dispatch)=> {
-    dispatch(getAllMyntraShirts())
-    console.log(payload)
-    
+    dispatch(getAllMyntraShirts())    
     try{
-        const data = await axios.get(`https://myntra-json-mock-server.herokuapp.com/shirts?`);
+        const data = await axios.get(`https://myntra-json-mock-server.herokuapp.com/shirts?${payload}`);
         dispatch(getAllMyntraShirtsSuccess(data))
     }catch(err){
         dispatch(getAllMyntraShirtsFailure(err))
     }
 }
 
-export const filterShirts = (payload) => async (dispatch) => {
-    dispatch(filterData())
-    try{
-        const newData = await axios.get(`https://myntra-json-mock-server.herokuapp.com/shirts?gender=${payload.gender}&categories=${payload.categories}`)
-        dispatch(getAllMyntraShirtsSuccess(newData))
-    }catch(err){
-        dispatch(getAllMyntraShirtsFailure(err))
-    }
-}
