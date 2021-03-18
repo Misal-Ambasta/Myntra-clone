@@ -190,7 +190,7 @@ export default function PrimarySearchAppBar() {
                             classes={{
                                 root: classes.inputRoot,
                                 input: classes.inputInput,
-                                fullWidth: true
+                                fullWidth: "true"
                             }}
                             inputProps={{ 'aria-label': 'search' }}
                         />

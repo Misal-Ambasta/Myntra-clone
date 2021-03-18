@@ -8,9 +8,8 @@ export default function PublicRoutes() {
     return (
         <div>
             <Route path="/" component={Navbar} />
-            
             <Switch>
-                <Route path="/shirts" component={Shirts} />
+                <Route path="/" exact component={Shirts} />
                 <Route path="/shirts/:id" component={SingleShirt} />
                 <Route render={() => <h3>Page not found</h3>} />
             </Switch>
