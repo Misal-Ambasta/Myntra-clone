@@ -1,11 +1,12 @@
-import { ADD_PRODUCT_TO_CART, GET_ALL_MYNTRA_SHIRTS, GET_ALL_MYNTRA_SHIRTS_SUCCESS, GET_ALL_MYNTRA_SHIRTS_FAILURE, DELETE_PRODUCT, INCREASE_QUANTITY, DECREASE_QUANTITY } from './actionTypes';
+import { ADD_PRODUCT_TO_CART, DELETE_FROM_CART, ADD_TO_WISHLIST, DELETE_FROM_WISHLISH, GET_ALL_MYNTRA_SHIRTS, GET_ALL_MYNTRA_SHIRTS_SUCCESS, GET_ALL_MYNTRA_SHIRTS_FAILURE, DELETE_PRODUCT, INCREASE_QUANTITY, DECREASE_QUANTITY } from './actionTypes';
 import { loadData, saveData, removeData } from '../Utilis/localStorage';
 
 const initState = {
     data: loadData('data') || [],
     isLoading: false,
     error: false,
-    cart: loadData('cart') || []
+    cart: loadData('cart') || [],
+    wishlist: loadData('wishlist') || [],
 };
 
 const reducer = (state = initState, { type, payload }) => {
@@ -32,6 +33,30 @@ const reducer = (state = initState, { type, payload }) => {
                 error: true,
                 message: `Something went wrong: ${payload}`
             };
+        case ADD_TO_WISHLIST:
+            saveData('wishlist', [...state.wishlist, payload]);
+            return {
+                ...state,
+                wishlist: [...state.wishlist, payload]
+            }
+        case ADD_PRODUCT_TO_CART:
+            saveData('cart', [...state.cart, payload]);
+            return {
+                ...state,
+                cart: [...state.cart, payload]
+            }
+        case DELETE_FROM_CART:
+            saveData('cart', state.cart.filter(item => item.id != payload));
+            return{
+                ...state,
+                cart: state.cart.filter(item => item.id != payload)
+            }
+        case DELETE_FROM_WISHLISH:
+            saveData('wishlist', state.wishlist.filter(item => item.id != payload));
+            return{
+                ...state,
+                wishlist: state.wishlist.filter(item => item.id != payload)
+            }
         default:
             return state;
     }

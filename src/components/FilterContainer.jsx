@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllShirts } from "../redux/action"
 import { makeStyles, Box, RadioGroup, Radio, Typography, Paper, Checkbox, FormControl, FormControlLabel } from '@material-ui/core/';
@@ -24,16 +24,55 @@ export default function FilterContainer() {
     const [filterShirt, setFilterShirt] = useState({categories:[], gender:"", discount:""})
     const dispatch = useDispatch();
 
-    const handleGenderFilter = (value) => {
+    useEffect(()=>{
+        console.log(filterShirt)
+        let str = "";
+
+        for(let key in filterShirt){
+            if(Array.isArray(filterShirt[key])){
+                filterShirt[key].forEach(item => {
+                    str+=`${key}=${item}&`
+                })
+            }else if(filterShirt[key]){
+                if(key == "discount"){
+                    str += `${key}_gte=${filterShirt[key]}&`
+                }
+                else{
+
+                    str += `${key}=${filterShirt[key]}&`
+                }
+            }
+        }
+
+        dispatch(getAllShirts(str))
+
+    },[filterShirt])
+
+    const handleGenderFilter = (e) => {
         setFilterShirt({
-            ...filterShirt, gender: value
+            ...filterShirt, gender: e.target.value
         })
-        
-        dispatch(getAllShirts({
-            ...filterShirt, gender: value
-        }))
+    }
+    const handleCategoriesFilter = (e) => {
+        let value = filterShirt.categories.findIndex((item) => item == e.target.value)
+        let newCategories
+        if(value>=0){
+            newCategories = filterShirt.categories.filter(item => item != e.target.value)
+           
+        }else{
+            newCategories = [...filterShirt.categories, e.target.value]
+        }
+        setFilterShirt({
+            ...filterShirt, categories: newCategories
+        })
+    }
+    const handleDiscountFilter = (e) => {
+        setFilterShirt({
+            ...filterShirt, discount: e.target.value
+        })
     }
 
+    
     return (
         <Paper className={classes.paperFilter}>
             <Box>
@@ -50,30 +89,27 @@ export default function FilterContainer() {
             </Box>
             <hr />
             <Box>
-                <FormControl component="fieldset">
-                    {/* <FormLabel component="legend" >Purpose</FormLabel> */}
-                    <Typography gutterBottom variant="button" color="secondary">
-                        Purpose
+                <FormControl component="fieldset" onChange={handleCategoriesFilter}>
+                    <Typography gutterBottom variant="button" color="textPrimary">
+                        CATEGORIES
                     </Typography>
-                    <FormControlLabel name="delivery" style={{ fontSize: '1px' }} value="online delivery" control={<Checkbox color="secondary" />} label={<Typography className={classes.formControlLabel}>Only for online delivery</Typography>} labelPlacement="end" />
-                    <FormControlLabel name="social" value="social media" control={<Checkbox color="secondary" />} label={<Typography className={classes.formControlLabel}>For social media</Typography>} labelPlacement="end" />
-                    <FormControlLabel name="food" value="videography" control={<Checkbox color="secondary" />} label={<Typography className={classes.formControlLabel}>Food preparation videography</Typography>} labelPlacement="end" />
-                    <FormControlLabel name="prAct" value="PR Activity" control={<Checkbox color="secondary" />} label={<Typography className={classes.formControlLabel}>PR activity</Typography>} labelPlacement="end" />
+                    <FormControlLabel name="Shirts" style={{ fontSize: '1px' }} value="shirts" control={<Checkbox color="secondary" />} label={<Typography className={classes.formControlLabel}>Shirts</Typography>} labelPlacement="end" />
+                    <FormControlLabel name="Sleep Shirts" value="sleepShirts" control={<Checkbox color="secondary" />} label={<Typography className={classes.formControlLabel}>Sleep Shirts</Typography>} labelPlacement="end" />
                 </FormControl>
             </Box>
 
             <hr />
             <Box>
-                <FormControl component="fieldset">
-                    {/* <FormLabel component="legend" >Purpose</FormLabel> */}
-                    <Typography gutterBottom variant="button" color="secondary">
-                        Purpose
-                    </Typography>
-                    <FormControlLabel name="delivery" style={{ fontSize: '1px' }} value="online delivery" control={<Checkbox color="secondary" />} label={<Typography className={classes.formControlLabel}>Only for online delivery</Typography>} labelPlacement="end" />
-                    <FormControlLabel name="social" value="social media" control={<Checkbox color="secondary" />} label={<Typography className={classes.formControlLabel}>For social media</Typography>} labelPlacement="end" />
-                    <FormControlLabel name="food" value="videography" control={<Checkbox color="secondary" />} label={<Typography className={classes.formControlLabel}>Food preparation videography</Typography>} labelPlacement="end" />
-                    <FormControlLabel name="prAct" value="PR Activity" control={<Checkbox color="secondary" />} label={<Typography className={classes.formControlLabel}>PR activity</Typography>} labelPlacement="end" />
-                </FormControl>
+                <Typography gutterBottom variant="button" color="textPrimary">
+                DISCOUNT RANGE
+                </Typography>
+               
+                <RadioGroup aria-label="category" name="category" onChange={handleDiscountFilter}>
+                    <FormControlLabel size="small" style={{ color: 'black' }} value="10" control={<Radio color="secondary" size="small" />} label="10% and above" />
+                    <FormControlLabel size="small" style={{ color: 'black' }} value="20" control={<Radio color="secondary" size="small" />} label="20% and above" />
+                    <FormControlLabel size="small" style={{ color: 'black' }} value="30" control={<Radio color="secondary" size="small" />} label="30% and above" />
+                    <FormControlLabel size="small" style={{ color: 'black' }} value="40" control={<Radio color="secondary" size="small" />} label="40% and above" />
+                </RadioGroup>
             </Box>
         </Paper>
     );

@@ -1,9 +1,60 @@
 .shirtContainer{
   display: grid;
-  grid-template-columns: repeat(5,1fr);
+  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
   grid-gap: 16px;
 }
 
-#sizeNumber{
-  color: grey;
+.price{
+  
+}
+
+.price *{
+  font-weight: bold !important;
+  width: 340px !important;
+  font-size: 22px !important;
+}
+
+.price2 *{
+  font-weight: 550 !important;
+  width: 250px !important;
+  font-size: 14px !important;
+}
+.round{
+  width: 50px; 
+  height: 50px;
+  border-radius: 50%;
+  display: flex; /* or inline-flex */
+  align-items: center; 
+  justify-content: center;
+  border: 1px solid #CCCDD1;
+}
+
+.buttonIn { 
+  width: 300px; 
+  position: relative; 
+} 
+
+input { 
+  margin: 0px; 
+  padding-left: 10px; 
+  width: 100%; 
+  outline: none; 
+  height: 40px; 
+  border-radius: 3px;
+  padding: 10x;
+}
+
+.checkBtn{
+  position: absolute; 
+  top: 0; 
+  border-radius: 5px; 
+  right: 0px; 
+  z-index: 2; 
+  border: none; 
+  top: 2px; 
+  height: 40px; 
+  cursor: pointer; 
+  color: grey; 
+  background-color: white; 
+  transform: translateX(2px); 
 }

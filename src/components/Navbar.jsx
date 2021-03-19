@@ -1,6 +1,7 @@
 import React from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import { useSelector } from 'react-redux';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -17,10 +18,16 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
+import { useDispatch } from 'react-redux';
+import { getAllShirts } from '../redux/action';
+import RightSideBar from "./RightSideBar";
+import { useHistory } from 'react-router-dom';
+
 
 const useStyles = makeStyles((theme) => ({
     grow: {
-        flexGrow: 1
+        flexGrow: 1,
+       
     },
     menuButton: {
         marginRight: theme.spacing(2)
@@ -94,6 +101,24 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up('md')]: {
             display: 'none'
         }
+    },
+    iconColor:{
+        color: 'rgb(105, 110, 121)'
+    },
+    appBarStyle:{
+        background: '#fff'
+    },
+    home:{
+        cursor:"pointer"
+    },
+    myntraIcon:{
+        paddingTop:"10px"
+    },
+    wishListIcon:{
+        width:"25px"
+    },
+    profileIcon:{
+
     }
 }));
 
@@ -101,6 +126,10 @@ export default function PrimarySearchAppBar() {
     const classes = useStyles();
     const [ anchorEl, setAnchorEl ] = React.useState(null);
     const [ mobileMoreAnchorEl, setMobileMoreAnchorEl ] = React.useState(null);
+    const dispatch = useDispatch();
+    const history = useHistory()
+    const cart = useSelector((state) => state.cart);
+    const wishlist = useSelector((state) => state.wishlist);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -122,6 +151,16 @@ export default function PrimarySearchAppBar() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const handleSearch = (e) => {
+        if(e.keyCode == 13){
+            dispatch(getAllShirts(`q=${e.target.value}`));
+        }
+    }
+
+    const handleHome = () => {
+        history.push(`/`)
+    }
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu anchorEl={anchorEl} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} id={menuId} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }} open={isMenuOpen} onClose={handleMenuClose}>
@@ -134,38 +173,38 @@ export default function PrimarySearchAppBar() {
     const renderMobileMenu = (
         <Menu anchorEl={mobileMoreAnchorEl} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} id={mobileMenuId} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }} open={isMobileMenuOpen} onClose={handleMobileMenuClose}>
             <MenuItem>
-                <IconButton aria-label="show 4 new mails" color="inherit">
+                <IconButton aria-label="show wishlist" color="inherit">
                     <Badge badgeContent={4} color="secondary">
-                        <MailIcon />
+                    <PersonOutlineIcon className={classes.iconColor} />
                     </Badge>
                 </IconButton>
-                <p>Messages</p>
+                <p>Profile</p>
             </MenuItem>
             <MenuItem>
-                <IconButton aria-label="show 11 new notifications" color="inherit">
+                <IconButton aria-label="show cart" color="inherit">
                     <Badge badgeContent={11} color="secondary">
-                        <NotificationsIcon />
+                    <FavoriteBorderIcon className={classes.iconColor} />
                     </Badge>
                 </IconButton>
-                <p>Notifications</p>
+                <RightSideBar name={"Wishlist"} data={wishlist}/>
             </MenuItem>
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton aria-label="account of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
-                    <AccountCircle />
+                     <LocalMallIcon className={classes.iconColor} />
                 </IconButton>
-                <p>Profile</p>
+                <RightSideBar name={"Bag"} data={cart}/>
             </MenuItem>
         </Menu>
     );
 
     return (
         <div className={classes.grow}>
-            <AppBar style={{ background: '#fff' }} position="static">
+            <AppBar className={`${classes.appBarStyle} ${classes.home}`} position="static">
                 <Toolbar>
-                    <div>
+                    <div onClick={handleHome} className={classes.myntraIcon}>
                         <img width="100px" src="https://images.indianexpress.com/2021/01/myntra.png" alt="mytra icon" />
                     </div>
-                    <Typography className={classes.title} variant="p" noWrap>
+                    <Typography onClick={handleHome} className={classes.title} variant="p" noWrap>
                         MEN
                     </Typography>
                     <Typography className={classes.title} variant="p" noWrap>
@@ -182,8 +221,8 @@ export default function PrimarySearchAppBar() {
                     </Typography>
 
                     <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon style={{ color: 'rgb(105, 110, 121)' }} />
+                        <div  className={classes.searchIcon}>
+                            <SearchIcon className={`${classes.iconColor}`}  />
                         </div>
                         <InputBase
                             placeholder="Search for products, brands, and more"
@@ -193,43 +232,40 @@ export default function PrimarySearchAppBar() {
                                 fullWidth: "true"
                             }}
                             inputProps={{ 'aria-label': 'search' }}
+                            onKeyDown={handleSearch}
                         />
                     </div>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
                         <IconButton edge="end" aria-label="account of current user" color="inherit">
                             <div className={classes.iconContainer}>
-                                <PersonOutlineIcon style={{ color: 'rgb(105, 110, 121)' }} />
+                                <PersonOutlineIcon className={classes.iconColor} fontSize="medium"/>
                                 <Typography className={classes.iconTitle} variant="div" noWrap>
                                     Profile
                                 </Typography>
                             </div>
                         </IconButton>
-                        <IconButton aria-label="show 4 new mails" color="inherit">
-                            <div className={classes.iconContainer}>
-                                <Badge color="secondary">
-                                    <FavoriteBorderIcon style={{ color: 'rgb(105, 110, 121)' }} />
+                        <IconButton aria-label="show wishlist" color="inherit" >
+                            <div className={`${classes.iconContainer} ${classes.wishListIcon}`}>
+                                <Badge badgeContent={wishlist.length} color="secondary">
+                                    <FavoriteBorderIcon className={classes.iconColor} />
                                 </Badge>
-                                <Typography className={classes.iconTitle} variant="div" noWrap>
-                                    Wishlist
-                                </Typography>
+                                <RightSideBar name={"Wishlist"} data={wishlist}/>
                             </div>
                         </IconButton>
 
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
+                        <IconButton aria-label="show cart" color="inherit" >
                             <div className={classes.iconContainer}>
-                                <Badge badgeContent={17} color="secondary">
-                                    <LocalMallIcon style={{ color: 'rgb(105, 110, 121)' }} />
+                                <Badge badgeContent={cart.length} color="secondary">
+                                    <LocalMallIcon className={classes.iconColor} />
                                 </Badge>
-                                <Typography className={classes.iconTitle} variant="div" noWrap>
-                                    Bag
-                                </Typography>
+                                <RightSideBar name={"Bag"} data={cart}/>
                             </div>
                         </IconButton>
                     </div>
                     <div className={classes.sectionMobile}>
                         <IconButton aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
-                            <MoreIcon style={{ color: 'rgb(105, 110, 121)' }} />
+                            <MoreIcon className={classes.iconColor} />
                         </IconButton>
                     </div>
                 </Toolbar>

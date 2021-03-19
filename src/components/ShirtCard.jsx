@@ -1,5 +1,6 @@
 import React, { useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch, useSelector } from 'react-redux';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -8,7 +9,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
+import PriceComponent from "./PriceComponent";
+import SearchIcon from '@material-ui/icons/Search';
+import RightSideBar from "./RightSideBar";
+import { addToWishlist } from "../redux/action"
 
 const useStyles = makeStyles({
     root: {
@@ -32,13 +37,7 @@ const useStyles = makeStyles({
           background:"white",
           width: "100%",
       },
-      actualPrice:{
-          color: "grey",
-          textDecoration:"line-through"
-      },
-      discount:{
-          color:"#FF905A"
-      },
+     
       wishlistBtn: {
         display:"flex",
         flexDirection:"row",
@@ -66,6 +65,14 @@ const useStyles = makeStyles({
       },
       wishlishStyle:{
           marginTop:"5px",
+      },
+      similar:{
+          position:"absolute",
+          top:"-50px",
+          right:"10px",
+          cursor: "pointer",
+          backgroundColor: "white",
+          borderRadius:"50%"
       }
      
 });
@@ -73,12 +80,13 @@ const useStyles = makeStyles({
 export default function ShirtCard({ data }) {
     const classes = useStyles();
     const { images, brand, name, size, discount, price,id } = data;
+    const dataAll = useSelector(state => state.data)
+    const wishlist = useSelector((state) => state.wishlist)
     const [ hoverActive, setHoverActive ] = useState(false)
     const history = useHistory()
+    const dispatch = useDispatch()
+    const [similarActive, setSimilarActive] = useState('')
 
-    const discountPrice = () => {
-        return Math.round(Number(price) * (100 - Number(discount)) / 100);
-    };
 
     const handleHoverEnter = () => {
         setHoverActive(true)
@@ -89,14 +97,26 @@ export default function ShirtCard({ data }) {
     }
 
     const handleShirtDetails = () => {
-        console.log(id)
-        history.push(`shirts/${id}`)
+            history.push(`shirts/${id}`)
+    }
+    
+    const handleSimilar = () => {
+        setSimilarActive(brand)
+        console.log(similarActive)
     }
 
+    const handleWishlist = () => {
+        dispatch(addToWishlist(data))
+    }
+
+    let wishBtn = wishlist.findIndex(x => x.id == data.id)
+
+    let similarData = dataAll.filter(x => x.brand == similarActive)
+    console.log(similarData)
     return (
-        <Card onMouseEnter={ handleHoverEnter } onMouseLeave={ handleHoverLeave } className={classes.root} onClick={()=>handleShirtDetails()}>
+        <Card onMouseEnter={ handleHoverEnter } onMouseLeave={ handleHoverLeave } className={classes.root} >
             <CardActionArea>
-                <CardMedia component="img" alt="Contemplative Reptile" height="400" width="100" image={images[0]} title="Contemplative Reptile" />
+                <CardMedia onClick={()=>handleShirtDetails()} component="img" alt="Contemplative Reptile" height="400" width="100" image={images[0]} title="Contemplative Reptile" />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
                         {brand}
@@ -107,26 +127,13 @@ export default function ShirtCard({ data }) {
                 </CardContent>
             </CardActionArea>
             <CardContent>
-                <div className={classes.priceContainer}>
-                    <Typography gutterBottom variant="body2" component="p">
-                        Rs. {discountPrice()}
-                    </Typography>
-                    <Typography className={classes.actualPrice}  variant="body2" color="textSecondary" component="p">
-                        Rs {price}
-                       
-                    </Typography>
-                    <Typography className={classes.discount} variant="body2" color="textSecondary" component="p">
-                        {discount}% OFF
-                    </Typography>
-                </div>
+               <PriceComponent price={price} discount={discount} />
             </CardContent>
-
             { hoverActive && <div className={classes.hoverContainer}>
-                <div className={classes.wishlistBtn}> 
-                    
-                    <FavoriteBorderIcon className={classes.wishlishStyle} style={{ color: 'rgb(105, 110, 121)'}} /> 
-                    <div className={classes.wishlishStyle}>Wishlist</div>
-                   
+                <SearchIcon className={classes.similar} name={"Similar Products"} onClick={()=>handleSimilar()} />
+                <div className={classes.wishlistBtn} onClick={handleWishlist} style={{backgroundColor: wishBtn === -1? "white": "#535766"}}>                     
+                    <FavoriteBorderIcon style={{color: wishBtn === -1? "grey": "#FF527B"}} className={classes.wishlishStyle} /> 
+                    <div style={{color: wishBtn === -1? "#535766": "white"}} className={classes.wishlishStyle}>{wishBtn === -1 ? "WISHLIST": "WISHLISTED" }</div>                  
                 </div>
                 <div className={classes.sizes}>
                     <div>Sizes:</div>
