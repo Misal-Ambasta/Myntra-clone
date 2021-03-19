@@ -9,7 +9,7 @@ import PriceComponent from "./PriceComponent";
 import '../App.css';
 import LocalShippingOutlinedIcon from '@material-ui/icons/LocalShippingOutlined';
 import WishListBtn from "./WishListBtn";
-import {addProductToCart, addToWishlist} from "../redux/action"
+import {addProductToCart, addToWishlist} from "../redux/action";
 
 const defaultProps = {
     bgcolor: 'background.paper',
@@ -20,8 +20,8 @@ const defaultProps = {
   };
 
 const useStyles = makeStyles((theme) => ({
-    borderShow:{
-        border:"1px solid red"
+    root:{
+        paddingTop:"20px"
     },
     imgBox:{
         marginBottom:"15px",
@@ -52,12 +52,16 @@ const useStyles = makeStyles((theme) => ({
     reviewBox:{
         display:"flex",
         flexDirection:"row",
-        border: "1px solid grey",
+        border: "1px solid #EAEAEC",
         width:"150px",
         gap:"4px",
         padding:"3px",
         borderRadius:"2px",
-        cursor:"pointer"
+        cursor:"pointer",
+        marginTop:"10px",
+        "& *":{
+            color: "rgb(83, 87, 102)"
+        }
       
     },
     commentIcon:{
@@ -82,7 +86,8 @@ const useStyles = makeStyles((theme) => ({
         display:"flex",
         flexDirection:"row",
         gap:"7px",
-        cursor:"pointer"
+        cursor:"pointer",
+        marginTop:"20px"
     },
     sellerName:{
         color:"#FF527B",
@@ -113,12 +118,19 @@ const useStyles = makeStyles((theme) => ({
         outline:"none",
         border:"none",
         borderRadius:"2px",
-        cursor:"pointer"
+        cursor:"pointer",
+        fontSize:"24px"
     },
     addWithWishlist:{
         display:"flex",
         gap:"12px"
-    }
+    },
+    selectSizeText:{
+        fontWeight:"bold"
+    },
+    pleaseSelectText:{
+        color:"#FF527B"
+    },
 
 }))
 
@@ -141,9 +153,11 @@ export default function SingleShirt() {
     }
 
     const handleAddtoCart = () => {
-        if(selectedSize != 0){
+        if(selectedSize !== 0 && selectedSize !== -1 ){
             dispatch(addProductToCart({...item, selectedSize}))
             setAddtoBagText('GO TO BAG')
+        }else if(selectedSize === 0){
+            setSelectedSize(-1)
         }
     }
 
@@ -154,7 +168,7 @@ export default function SingleShirt() {
     let wishBtn = wishlist.findIndex(x => x.id == item.id)
 
     return (
-        <div>
+        <div className={classes.root}>
             <Grid container spacing={3}>
                 <Grid container item xs={12} sm={6} className={classes.imgContainer}>
                         {images.map((item,i) => 
@@ -180,9 +194,10 @@ export default function SingleShirt() {
                     </div>
                     <div className={classes.inclusiveTaxes}>inclusive of all taxes</div>
                     <br/>
-                    <Typography variant="h6" color="textSecondary" className={classes.name}>
+                    <Typography variant="p" color="textPrimary" className={classes.selectSizeText}>
                         SELECT SIZE
                     </Typography>
+                    {selectedSize === -1 ? <p className={classes.pleaseSelectText}> Please select a size</p> : <></>}
                     <div className={classes.sizeBox}>
                         {size.map((item,i)=>
                             <div key={i} onClick={()=>handleSize(item)} style={{color: selectedSize == item? "#FF527B" : "black", borderColor: selectedSize == item? "#FF527B" : "#CCCDD1"}} className="round">{item}</div>

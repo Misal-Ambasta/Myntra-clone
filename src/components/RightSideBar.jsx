@@ -3,20 +3,13 @@ import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import DeleteIcon from '@material-ui/icons/Delete';
-import {deleteFromCart} from "../redux/action"
+import { deleteFromCart, deleteFromWishlist } from "../redux/action";
+import CartCard from "./CartCard";
+import {discountPrice} from "./PriceComponent"
 
 const useStyles = makeStyles({
   list: {
-    width: 350,
+    width: 750,
   },
   fullList: {
     width: 'auto',
@@ -25,6 +18,11 @@ const useStyles = makeStyles({
     color:"black",
     fontSize: '10px',
     fontWeight: 'bold'
+  },
+  totalPrice:{
+    margin:"auto",
+    width:"240px",
+    paddingBottom:"30px"
   }
 });
 
@@ -35,7 +33,8 @@ export default function TemporaryDrawer({name, data}) {
   const [state, setState] = React.useState({
     right: false,
   });
-  console.log(data)
+  const [totalPrice, setTotalPrice] = React.useState(0)
+
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -45,29 +44,37 @@ export default function TemporaryDrawer({name, data}) {
   };
 
   const handleDeleteCart = (id) => {
-    dispatch(deleteFromCart(id))
+    if(name == 'Bag'){
+      dispatch(deleteFromCart(id))
+    }else if(name =='Wishlist'){
+      dispatch(deleteFromWishlist(id))
+    }
   }
 
+  const handleTotalPrice = () => {
+    let sum = 0
+    if(data.length !== 0){
+      for(let i=0; i<data.length; i++){
+        sum += Number(discountPrice(data[i].price, data[i].discount))
+      }
+    }
+    
+    return sum
+  }
   const list = (anchor) => (
-    <div
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === 'top' || anchor === 'bottom',
-      })}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <List>
-        {data && data.map((text, index) => (
-          <ListItem button key={text.brand}>
-            <ListItemText primary={text.brand} />
-            <ListItemText primary={text.selectedSize} />
-            <ListItemIcon onClick={()=>handleDeleteCart(text.id)}><DeleteIcon/></ListItemIcon>
-          </ListItem>
-        ))}
-      </List>
+    
+    <div>
+
+      {data && data.map((text, index) => (
+        <CartCard data={text} cardName={name} handleDelete={handleDeleteCart}/>
+      ))}
+      {name === 'Bag'? handleTotalPrice() == 0 ? <h2>Add Something in bag</h2>:
+        <h4 className={classes.totalPrice}>Total Price: Rs.<span> {data && handleTotalPrice()} </span></h4>:<></>
+      }
     </div>
+   
   );
+
 
   return (
     <div>

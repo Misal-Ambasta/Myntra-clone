@@ -1,4 +1,4 @@
-import { ADD_PRODUCT_TO_CART,DELETE_FROM_CART, FILTER,ADD_TO_WISHLIST, GET_ALL_MYNTRA_SHIRTS,GET_ALL_MYNTRA_SHIRTS_SUCCESS, GET_ALL_MYNTRA_SHIRTS_FAILURE, DELETE_PRODUCT, INCREASE_QUANTITY, DECREASE_QUANTITY } from "./actionTypes";
+import { ADD_PRODUCT_TO_CART,DELETE_FROM_CART, FILTER,ADD_TO_WISHLIST, DELETE_FROM_WISHLISH, GET_ALL_MYNTRA_SHIRTS,GET_ALL_MYNTRA_SHIRTS_SUCCESS, GET_ALL_MYNTRA_SHIRTS_FAILURE, DELETE_PRODUCT, INCREASE_QUANTITY, DECREASE_QUANTITY } from "./actionTypes";
 import axios from 'axios'
 
 export const getAllMyntraShirts = () => ({
@@ -47,6 +47,10 @@ export const addToWishlist = (payload) => ({
 
 export const deleteFromCart = (payload) => ({
     type: DELETE_FROM_CART,
+    payload
+})
+export const deleteFromWishlist = (payload) => ({
+    type: DELETE_FROM_WISHLISH,
     payload
 })
 

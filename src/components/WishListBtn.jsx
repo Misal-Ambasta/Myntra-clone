@@ -21,12 +21,12 @@ const useStyles = makeStyles({
         width:"20%",
     },
     heartIcon:{
-        padding:"10px",
+        padding:"14px",
         paddingLeft:"70px"
     },
     wishListText:{
         fontSize:"24px",
-        paddingTop:"10px"
+        paddingTop:"14px"
     }
 })
 

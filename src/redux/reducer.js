@@ -1,4 +1,4 @@
-import { ADD_PRODUCT_TO_CART, DELETE_FROM_CART, ADD_TO_WISHLIST, GET_ALL_MYNTRA_SHIRTS, GET_ALL_MYNTRA_SHIRTS_SUCCESS, GET_ALL_MYNTRA_SHIRTS_FAILURE, DELETE_PRODUCT, INCREASE_QUANTITY, DECREASE_QUANTITY } from './actionTypes';
+import { ADD_PRODUCT_TO_CART, DELETE_FROM_CART, ADD_TO_WISHLIST, DELETE_FROM_WISHLISH, GET_ALL_MYNTRA_SHIRTS, GET_ALL_MYNTRA_SHIRTS_SUCCESS, GET_ALL_MYNTRA_SHIRTS_FAILURE, DELETE_PRODUCT, INCREASE_QUANTITY, DECREASE_QUANTITY } from './actionTypes';
 import { loadData, saveData, removeData } from '../Utilis/localStorage';
 
 const initState = {
@@ -50,6 +50,12 @@ const reducer = (state = initState, { type, payload }) => {
             return{
                 ...state,
                 cart: state.cart.filter(item => item.id != payload)
+            }
+        case DELETE_FROM_WISHLISH:
+            saveData('wishlist', state.wishlist.filter(item => item.id != payload));
+            return{
+                ...state,
+                wishlist: state.wishlist.filter(item => item.id != payload)
             }
         default:
             return state;

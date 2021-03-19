@@ -12,7 +12,8 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { useHistory } from 'react-router-dom';
 import PriceComponent from "./PriceComponent";
 import SearchIcon from '@material-ui/icons/Search';
-import RightSideBar from "./RightSideBar"
+import RightSideBar from "./RightSideBar";
+import { addToWishlist } from "../redux/action"
 
 const useStyles = makeStyles({
     root: {
@@ -80,8 +81,10 @@ export default function ShirtCard({ data }) {
     const classes = useStyles();
     const { images, brand, name, size, discount, price,id } = data;
     const dataAll = useSelector(state => state.data)
+    const wishlist = useSelector((state) => state.wishlist)
     const [ hoverActive, setHoverActive ] = useState(false)
     const history = useHistory()
+    const dispatch = useDispatch()
     const [similarActive, setSimilarActive] = useState('')
 
 
@@ -101,6 +104,12 @@ export default function ShirtCard({ data }) {
         setSimilarActive(brand)
         console.log(similarActive)
     }
+
+    const handleWishlist = () => {
+        dispatch(addToWishlist(data))
+    }
+
+    let wishBtn = wishlist.findIndex(x => x.id == data.id)
 
     let similarData = dataAll.filter(x => x.brand == similarActive)
     console.log(similarData)
@@ -122,10 +131,9 @@ export default function ShirtCard({ data }) {
             </CardContent>
             { hoverActive && <div className={classes.hoverContainer}>
                 <SearchIcon className={classes.similar} name={"Similar Products"} onClick={()=>handleSimilar()} />
-                <RightSideBar name={"Similar Products"} style={{border:"1px solid red"}} data={dataAll}/>
-                <div className={classes.wishlistBtn}>                     
-                    <FavoriteBorderIcon className={classes.wishlishStyle} style={{ color: 'rgb(105, 110, 121)'}} /> 
-                    <div className={classes.wishlishStyle}>Wishlist</div>                  
+                <div className={classes.wishlistBtn} onClick={handleWishlist} style={{backgroundColor: wishBtn === -1? "white": "#535766"}}>                     
+                    <FavoriteBorderIcon style={{color: wishBtn === -1? "grey": "#FF527B"}} className={classes.wishlishStyle} /> 
+                    <div style={{color: wishBtn === -1? "#535766": "white"}} className={classes.wishlishStyle}>{wishBtn === -1 ? "WISHLIST": "WISHLISTED" }</div>                  
                 </div>
                 <div className={classes.sizes}>
                     <div>Sizes:</div>
