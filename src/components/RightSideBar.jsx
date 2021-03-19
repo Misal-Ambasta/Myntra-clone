@@ -1,6 +1,5 @@
-import React from 'react';
-import clsx from 'clsx';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';  
+import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import { deleteFromCart, deleteFromWishlist } from "../redux/action";
@@ -28,12 +27,10 @@ const useStyles = makeStyles({
 
 export default function TemporaryDrawer({name, data}) {
   const classes = useStyles();
-  const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch()
   const [state, setState] = React.useState({
     right: false,
   });
-  const [totalPrice, setTotalPrice] = React.useState(0)
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -66,11 +63,12 @@ export default function TemporaryDrawer({name, data}) {
     <div>
 
       {data && data.map((text, index) => (
-        <CartCard data={text} cardName={name} handleDelete={handleDeleteCart}/>
+        <CartCard key={index} data={text} cardName={name} handleDelete={handleDeleteCart}/>
       ))}
       {name === 'Bag'? handleTotalPrice() == 0 ? <h2>Add Something in bag</h2>:
         <h4 className={classes.totalPrice}>Total Price: Rs.<span> {data && handleTotalPrice()} </span></h4>:<></>
       }
+      {name ==="Wishlist" && data.length === 0 ? <h2>Add Something in Wishlist</h2>: <></>}
     </div>
    
   );

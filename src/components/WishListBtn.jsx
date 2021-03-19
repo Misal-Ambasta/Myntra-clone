@@ -11,7 +11,6 @@ const useStyles = makeStyles({
         width:"320px",
         height:"60px",
         outline:"none",
-        border:"none",
         borderRadius:"2px",
         cursor:"pointer",
         border:"1px solid grey",

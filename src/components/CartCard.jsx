@@ -1,6 +1,5 @@
-import React, { useState} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch, useSelector } from 'react-redux';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
@@ -33,7 +32,7 @@ const useStyles = makeStyles({
 
 export default function CartCard({ data, handleDelete, cardName, sum }) {
     const classes = useStyles();
-    const { images, brand, name, size, discount, price,id } = data;
+    const { images, brand, name, discount, price,id } = data;
     const history = useHistory()
 
     const handleShirtDetails = () => {

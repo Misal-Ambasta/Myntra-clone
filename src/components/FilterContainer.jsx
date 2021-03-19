@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getAllShirts } from "../redux/action"
 import { makeStyles, Box, RadioGroup, Radio, Typography, Paper, Checkbox, FormControl, FormControlLabel } from '@material-ui/core/';
 
@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
         cursor: 'pointer',
         height: 'max-content',
         marginTop:"10px"
-        // boxShadow: "11px 11px 28px -11px rgba(0,0,0,0.75)",
     }
 }));
 
@@ -25,7 +24,6 @@ export default function FilterContainer() {
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        console.log(filterShirt)
         let str = "";
 
         for(let key in filterShirt){
@@ -54,10 +52,10 @@ export default function FilterContainer() {
         })
     }
     const handleCategoriesFilter = (e) => {
-        let value = filterShirt.categories.findIndex((item) => item == e.target.value)
+        let value = filterShirt.categories.findIndex((item) => item === e.target.value)
         let newCategories
         if(value>=0){
-            newCategories = filterShirt.categories.filter(item => item != e.target.value)
+            newCategories = filterShirt.categories.filter(item => item !== e.target.value)
            
         }else{
             newCategories = [...filterShirt.categories, e.target.value]

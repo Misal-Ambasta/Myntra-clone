@@ -11,13 +11,6 @@ import LocalShippingOutlinedIcon from '@material-ui/icons/LocalShippingOutlined'
 import WishListBtn from "./WishListBtn";
 import {addProductToCart, addToWishlist} from "../redux/action";
 
-const defaultProps = {
-    bgcolor: 'background.paper',
-    borderColor: 'text.primary',
-    m: 1,
-    border: 1,
-    style: { width: '5rem', height: '5rem' },
-  };
 
 const useStyles = makeStyles((theme) => ({
     root:{
@@ -141,7 +134,7 @@ export default function SingleShirt() {
     const data = useSelector((state) => state.data);
     const wishlist = useSelector((state) => state.wishlist)
     const item = data.find((item) => item.id == params.id);
-    const { brand, reviews, name, images, price, seller, description, sizeFit, materialCare, sleeveLength, collar, fit, PrintOrPatternType, occasion, length, Hemline, Placket, discount,size } = item
+    const { brand, reviews, name, images, price, seller, discount,size } = item
     const [selectedSize, setSelectedSize] = useState(0)
     const [ addToBagText, setAddtoBagText ] = useState('ADD TO BAG')
 

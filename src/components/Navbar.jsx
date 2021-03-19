@@ -9,11 +9,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -119,6 +115,9 @@ const useStyles = makeStyles((theme) => ({
     },
     profileIcon:{
 
+    },
+    heartIcon:{
+        marginLeft:"4px"
     }
 }));
 
@@ -248,8 +247,8 @@ export default function PrimarySearchAppBar() {
                         <IconButton aria-label="show wishlist" color="inherit" >
                             <div className={`${classes.iconContainer} ${classes.wishListIcon}`}>
                                 <Badge badgeContent={wishlist.length} color="secondary">
-                                    <FavoriteBorderIcon className={classes.iconColor} />
-                                </Badge>
+                                    <FavoriteBorderIcon className={`${classes.heartIcon} ${classes.iconColor}`}/>
+                                </Badge>    
                                 <RightSideBar name={"Wishlist"} data={wishlist}/>
                             </div>
                         </IconButton>
